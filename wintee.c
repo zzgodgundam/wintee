@@ -39,9 +39,9 @@
 #include <io.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#include <rb\queue.h>
 #include <dos.h>
 #include <string.h>
+#include "queue.h"
 
 #define MAX_BUF_SIZE 1024
 
@@ -146,7 +146,7 @@ int get_opt(int argc, char *argv[])
                             processed_parameter = TRUE;
                             break;
                        case 'i':
-                            disable(); /* disable interrupts */
+                            _disable(); /* disable interrupts */
                             processed_parameter = TRUE;
                        	    break;
                        case '?':
@@ -155,12 +155,12 @@ int get_opt(int argc, char *argv[])
                             break;
                        case '-':
                             p++;
-                            if (!stricmp(p, "version"))
+                            if (!_stricmp(p, "version"))
                             {
                                 display_version();
                                 exit(0);
                             }
-                            else if (!stricmp(p, "help"))
+                            else if (!_stricmp(p, "help"))
                             {
                                 display_help();
                                 exit(0);
@@ -207,9 +207,9 @@ open_outfile(int argc, char *argv[])
         }
 
         if (!append_files)
-            i = open(*base_v++, O_CREAT | O_WRONLY, S_IREAD | S_IWRITE);
+            i = _open(*base_v++, O_CREAT | O_WRONLY, S_IREAD | S_IWRITE);
         else
-            i = open(*base_v++, O_CREAT | O_APPEND | O_WRONLY, S_IREAD | S_IWRITE);
+            i = _open(*base_v++, O_CREAT | O_APPEND | O_WRONLY, S_IREAD | S_IWRITE);
         if (-1 < i)
         {
             /* add to the list */
@@ -223,7 +223,7 @@ open_outfile(int argc, char *argv[])
             else
             {
                 /* no memory, so close the file */
-                close(i);
+                _close(i);
             }
         }
     }
@@ -246,7 +246,7 @@ write_to_file(int file, char *buffer, int bytes_to_write)
     int bytes_written, total_written = 0;
     char *p = buffer;
 
-    while (0 < (bytes_written = write(file, p, bytes_to_write)))
+    while (0 < (bytes_written = _write(file, p, bytes_to_write)))
     {
         /* short write */
         bytes_to_write -= bytes_written;
@@ -266,7 +266,6 @@ main(int argc, char *argv[])
     char buf[MAX_BUF_SIZE +1] = {0};
     int bytes_read;
     int STDIN, STDOUT;
-    int redirect;
     struct entry *np;
 
     get_opt(argc, argv);
@@ -274,12 +273,12 @@ main(int argc, char *argv[])
     /* Init the head */
     TAILQ_INIT(&head);
 
-    STDIN = fileno(stdin);
-    STDOUT = fileno(stdout);
+    STDIN = _fileno(stdin);
+    STDOUT = _fileno(stdout);
 
     open_outfile(argc, argv);
     /* while input, output */
-    while (0 < (bytes_read = read(STDIN, buf, MAX_BUF_SIZE)))
+    while (0 < (bytes_read = _read(STDIN, buf, MAX_BUF_SIZE)))
     {
         for (np=head.tqh_first; np != NULL; np = np->entries.tqe_next)
             write_to_file(np->outfile, buf, bytes_read);
@@ -295,7 +294,7 @@ main(int argc, char *argv[])
     /* Clean up the outfile queue */
     while (head.tqh_first != NULL)
     {
-        close(head.tqh_first->outfile);
+        _close(head.tqh_first->outfile);
         TAILQ_REMOVE(&head, head.tqh_first, entries);
     }
 
