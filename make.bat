@@ -1,4 +1,10 @@
 @set OUTPUT_NAME=wtee
+
+@if [%1]==[clean] @(
+  rd /s /q Build
+  goto :eof
+)
+
 @if not exist Build mkdir Build
 @if exist Build\OutputName.h del Build\OutputName.h
 @if exist Build\%OUTPUT_NAME%.exe del Build\%OUTPUT_NAME%.exe
