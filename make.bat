@@ -5,7 +5,7 @@
 
 @echo #define OUTPUT_NAME "%OUTPUT_NAME%" > build\OutputName.h
 
-cl /nologo /c /D_CRT_SECURE_NO_WARNINGS /W3 /WX /MT /O2 wintee.c
+cl /nologo /c /D_CRT_SECURE_NO_WARNINGS /W3 /WX /MT /O2 /Ibuild wintee.c
 @if not [%ERRORLEVEL%]==[0] goto :END
 link /nologo /OUT:build\%OUTPUT_NAME%.exe wintee.obj
 @if not [%ERRORLEVEL%]==[0] goto :END

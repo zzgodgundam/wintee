@@ -41,8 +41,10 @@
 #include <sys\stat.h>
 #include <dos.h>
 #include <string.h>
+
+#include <OutputName.h>
+
 #include "queue.h"
-#include "build\OutputName.h"
 
 #define MAX_BUF_SIZE 1024
 
