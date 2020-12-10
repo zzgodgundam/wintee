@@ -42,6 +42,7 @@
 #include <dos.h>
 #include <string.h>
 #include "queue.h"
+#include "build\OutputName.h"
 
 #define MAX_BUF_SIZE 1024
 
@@ -78,7 +79,7 @@ struct entry             /* Tail Queue entry node */
 void
 display_help(void)
 {
-    printf("Usage: wtee [OPTION]... [FILE]...\n");
+    printf("Usage: %s [OPTION]... [FILE]...\n", OUTPUT_NAME);
     printf("Copy standard input to each FILE, and also to standard output\n\n");
     printf("-a \t\t append to the given FILEs, do not overwrite\n");
     printf("-i \t\t ignore interrupt signals\n");
@@ -95,7 +96,7 @@ display_help(void)
 void
 display_version(void)
 {
-    printf("wtee %s\n", VERSION);
+    printf("%s %s\n", OUTPUT_NAME, VERSION);
     printf("There is NO WARRANTY, to the extent permitted by law.\n");
     printf("\nWritten by: %s\n", AUTHORS);
 }
